@@ -11,7 +11,7 @@ module Temple
                                      rp rt ruby section script style table tbody td tfoot
                                      th thead tr ul video doctype).freeze,
                      pre_tags: %w(code pre textarea).freeze,
-                     compact: false
+                     strip: false
 
       def initialize(opts = {})
         super
@@ -69,11 +69,11 @@ module Temple
         in [:multi, [:newline]]
           return (result << [:static, "</#{name}>"])
         in [:multi, [:multi, [:static, str]]]
-          return (result << [:static, "#{str}</#{name}>"])
+          return (result << [:static, "#{str.strip}</#{name}>"])
         in [:multi, [:escape, true, [:dynamic, code]], [:multi, [:newline]]]
           return (result << [:multi, [:escape, true, [:dynamic, code]], [:static, "</#{name}>"]])
         else nil
-        end if options[:compact]
+        end if options[:strip]
 
         @pretty = !@pre_tags || !options[:pre_tags].include?(name)
         if content
